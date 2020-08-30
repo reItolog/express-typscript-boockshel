@@ -1,35 +1,7 @@
-import  bookshelf from '../../db';
-import Users from'./UserModel';
-const constants = require('../../shared/constants/db');
+import Users from './UserModel';
 
 class UsersModel {
   constructor(private users = new Users) {
-    this.createUsersTable();
-  }
-
-  createUsersTable() {
-    // TODO:migrations add
-    return bookshelf.knex.schema
-      .hasTable(`${constants.USERS}`)
-      .then(function (exists) {
-        if (!exists) {
-          return bookshelf.knex.schema
-            .createTable(`${constants.USERS}`, function (t) {
-              t.increments('id').primary();
-              t.string('name', 100);
-              t.string('email', 100);
-              t.string('password');
-              t.string('media_id');
-              t.string('media_id').references('media.id');
-            })
-            .then(() => {
-              console.log(`table ${constants.USERS} created`);
-            })
-            .catch((e) => {
-              console.log('Error', e.message);
-            });
-        }
-      });
   }
 
   async findAll() {
@@ -43,25 +15,27 @@ class UsersModel {
   async findUserById(id: number) {
     try {
       return await this.users.where({ id }).fetch();
+
     } catch (e) {
       throw new Error(e.message);
     }
   }
 
   async saveUser(name: string, email: string, password: string, media_id: string) {
+    const newUser = new Users({
+      name,
+      email,
+      password,
+      media_id,
+    });
     try {
-      // return await this.users
-      //   .forge({ name, email, password, media_id })
-      //   .save()
-      //   .catch((e: Error) => {
-      //     console.log(e.message);
-      //   });
+      return await newUser.save();
     } catch (e) {
       throw new Error(e.message);
     }
   }
 
-  async removeUser(id: string) {
+  async removeUser(id: number) {
     try {
       return await this.users.where({ id }).destroy();
     } catch (e) {

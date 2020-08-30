@@ -6,7 +6,6 @@ class Media extends bookshelf.Model<Media> {
   get tableName() {
     return MEDIA;
   }
-
   media() {
     return this.hasMany(Users);
   }

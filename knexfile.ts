@@ -8,4 +8,8 @@ export default {
     password: config.MYSQL_PASSWORD,
     database: config.MYSQL_DATABASE,
   },
+  migrations: {
+    directory: './database/migrations'
+  },
+  loadExtensions: ['js', 'ts']
 }

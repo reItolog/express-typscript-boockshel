@@ -2,14 +2,21 @@ import bookshelf from '../../db';
 import { USERS } from '../../shared/constants/db';
 import Media from '../media/MediaModel';
 
-class Users extends bookshelf.Model<Users> {
-  get tableName() {
-    return USERS;
-  }
-
+// class Users extends bookshelf.Model<Users> {
+//   get tableName() {
+//     return USERS;
+//   }
+//
+//   media() {
+//     return this.belongsTo(Media);
+//   }
+// }
+const Users =  bookshelf.model('Users', {
+  tableName: USERS,
   media() {
-    return this.belongsTo(Media);
+    // @ts-ignore
+    return this.belongsTo(Media)
   }
-}
+})
 
 export default Users;
