@@ -12,7 +12,7 @@ class MediaModel {
     }
   }
 
-  async saveMedia(url: string, mimetype: string, title: string, description: string) {
+  async saveMedia(url: string, mimetype: string, title: string, description: string ) {
     const newMedia = new Media({
       url,
       'mime type': mimetype,
@@ -20,7 +20,9 @@ class MediaModel {
       description,
     });
     try {
-      return await newMedia.save();
+      return await newMedia.save().catch(e => {
+        console.log(e.message);
+      });
 
     } catch (e) {
       throw new Error(e.message);

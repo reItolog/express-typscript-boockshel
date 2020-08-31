@@ -14,8 +14,15 @@ class UsersModel {
 
   async findUserById(id: number) {
     try {
-      return await this.users.where({ id }).fetch();
+      const user = await this.users.where({ id }).fetch({ withRelated: ['media'] }).catch(e => {
+        console.log('user found error', e.message);
+      });
+      if (!user) {
+        throw new Error('user not found');
+      }
 
+      await user.media().fetch();
+      return user;
     } catch (e) {
       throw new Error(e.message);
     }

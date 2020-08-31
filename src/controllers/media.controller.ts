@@ -15,7 +15,7 @@ class MediaController implements IControllerBase {
 
   public initRoutes() {
     this.router.post('/save_media', this.upload.single('url'), this.saveMedia);
-    this.router.get('/get_all_media', this.getAllMedia);
+    this.router.get('/media', this.getAllMedia);
   }
 
   saveMedia = async (req: Request, res: Response) => {

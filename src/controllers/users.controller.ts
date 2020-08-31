@@ -12,10 +12,10 @@ class UsersController implements IControllerBase {
   }
 
   public initRoutes() {
-    this.router.post('/save_user', this.saveUser);
+    this.router.post('/user', this.saveUser);
     this.router.get('/users', this.getAllUsers);
     this.router.get('/user/:id', this.getUser);
-    this.router.post('/remove_user/:id', this.removeUser);
+    this.router.delete('/user/:id', this.removeUser);
   }
 
   async saveUser(req: Request, res: Response) {
