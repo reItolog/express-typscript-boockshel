@@ -21,6 +21,7 @@ class MediaController implements IControllerBase {
   saveMedia = async (req: Request, res: Response) => {
     const { title, description } = req.body;
     const { path, mimetype } = req.file;
+    console.log(req.file);
     try {
       const mediRes = await mediaModel.saveMedia(path, mimetype, title, description);
 

@@ -21,9 +21,12 @@ class UsersModel {
         throw new Error('user not found');
       }
 
-      await user.media().fetch();
+      await user.media().fetch().catch(e => {
+        console.log(e.message);
+      });
       return user;
     } catch (e) {
+      console.log('emo', e.message);
       throw new Error(e.message);
     }
   }
