@@ -1,8 +1,12 @@
 import Users from './UserModel';
+import Media from '../media/MediaModel';
 import { IUser } from '../../shared/interfaces/users';
 
 class UsersModel {
-  constructor(private users = new Users) {
+  constructor(
+    private users = new Users,
+    private media = new Media,
+  ) {
   }
 
   async findAll() {
@@ -15,25 +19,25 @@ class UsersModel {
 
   async findUserById(id: number) {
     try {
-      const user = await this.users.where({ id }).fetch({ withRelated: ['media'] }).catch(e => {
-        console.log('user found error', e.message);
+      const fetchOptions = {withRelated: ['avatar']}
+      const user: any = await this.users.where({ id }).fetch( fetchOptions).catch(e => {
+        console.log('Find User Error', e.message);
       });
-      if (!user) {
-        throw new Error('user not found');
-      }
 
-      await user.media().fetch().catch(e => {
-        console.log(e.message);
-      });
+      if (!user) {
+        throw new Error(`User not found whith id: ${id}`);
+      }
+      console.log(user.toJSON());
+
       return user;
     } catch (e) {
-      console.log('emo', e.message);
       throw new Error(e.message);
     }
   }
 
   async saveUser(user: IUser) {
     const newUser = new Users(user);
+
     try {
       return await newUser.save();
     } catch (e) {

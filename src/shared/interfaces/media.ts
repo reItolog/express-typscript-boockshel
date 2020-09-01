@@ -1,6 +1,7 @@
 export interface IMedia {
   url: string;
-  'mime type': string;
+  owner_id: number;
+  mime_type: string;
   title: string;
   description: string;
 }

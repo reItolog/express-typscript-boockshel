@@ -2,6 +2,7 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import IControllerBase from 'interfaces/IControllerBase.interface';
 import { usersModel } from '../models/users/users.model';
+import { IUser } from '../shared/interfaces/users';
 
 class UsersController implements IControllerBase {
   public path = '/';
@@ -20,9 +21,9 @@ class UsersController implements IControllerBase {
   }
 
   async saveUser(req: Request, res: Response) {
-    const { name, email, password, media_id } = req.body;
+    const payload: IUser = req.body;
     try {
-      const user = await usersModel.saveUser({ name, email, password, media_id });
+      const user = await usersModel.saveUser(payload);
       res.status(201).json({ user });
     } catch (e) {
       res.status(400).json({ error: e.message });

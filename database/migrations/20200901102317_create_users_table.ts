@@ -6,10 +6,11 @@ export async function up(knex: Knex): Promise<void> {
     if (!exists) {
       return knex.schema.createTable(`${USERS}`, function(t) {
         t.increments('id').primary();
-        t.string('name', 100).notNullable();
+        t.string('first_name', 100).notNullable();
+        t.string('last_name', 100).notNullable();
         t.string('email', 100).notNullable();
+        t.string('avatar', 255).nullable();
         t.string('password').notNullable();
-        t.integer('media_id').references('media.id').onDelete('CASCADE');
       });
     }
   });

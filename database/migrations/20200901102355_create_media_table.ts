@@ -7,8 +7,10 @@ export async function up(knex: Knex): Promise<void> {
     if (!exists) {
       return knex.schema.createTable(`${MEDIA}`, (t) => {
         t.increments('id').primary();
+        t.integer('owner_id');
+        t.foreign('owner_id').references('id').inTable('Users');
         t.string('url');
-        t.string('mime type');
+        t.string('mime_type');
         t.string('title');
         t.string('description');
       });

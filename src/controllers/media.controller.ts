@@ -15,16 +15,17 @@ class MediaController implements IControllerBase {
   }
 
   public initRoutes() {
-    this.router.post('/save_media', this.upload.single('url'), this.saveMedia);
+    this.router.post('/media', this.upload.single('url'), this.saveMedia);
     this.router.get('/media', this.getAllMedia);
   }
 
   saveMedia = async (req: Request, res: Response) => {
-    const { title, description } = req.body;
+    const { title, description, owner_id } = req.body;
     const { path, mimetype } = req.file;
     const newMedia: IMedia = {
       url: path,
-      'mime type': mimetype,
+      owner_id,
+      mime_type: mimetype,
       description,
       title,
     };

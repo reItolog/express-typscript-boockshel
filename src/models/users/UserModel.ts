@@ -8,8 +8,13 @@ class Users extends bookshelf.Model<Users> {
   }
 
   media() {
-    return this.belongsTo(Media, 'id');
+    return this.hasMany(Media, 'id');
+  }
+
+   avatar() {
+    return this.media();
   }
 }
+
 
 export default Users;
