@@ -1,10 +1,11 @@
 {
-  "name": "y",
+  "name": "express_sql",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon",
+    "build": "tsc -p tsconfig.json",
     "migrate": "knex migrate:latest"
   },
   "author": "",

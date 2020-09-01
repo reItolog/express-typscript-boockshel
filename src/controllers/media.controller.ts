@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import IControllerBase from 'interfaces/IControllerBase.interface';
 import { mediaModel } from '../models/media/media.models';
+import { IMedia } from '../shared/interfaces/media';
 
 class MediaController implements IControllerBase {
   public path = '/';
@@ -21,9 +22,14 @@ class MediaController implements IControllerBase {
   saveMedia = async (req: Request, res: Response) => {
     const { title, description } = req.body;
     const { path, mimetype } = req.file;
-    console.log(req.file);
+    const newMedia: IMedia = {
+      url: path,
+      'mime type': mimetype,
+      description,
+      title,
+    };
     try {
-      const mediRes = await mediaModel.saveMedia(path, mimetype, title, description);
+      const mediRes = await mediaModel.saveMedia(newMedia);
 
       res.json({ media: mediRes });
     } catch (error) {
@@ -38,7 +44,7 @@ class MediaController implements IControllerBase {
     } catch (error) {
       res.json({ error });
     }
-  }
+  };
 }
 
 export default MediaController;

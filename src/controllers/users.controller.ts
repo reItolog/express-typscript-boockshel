@@ -16,13 +16,25 @@ class UsersController implements IControllerBase {
     this.router.get('/users', this.getAllUsers);
     this.router.get('/user/:id', this.getUser);
     this.router.delete('/user/:id', this.removeUser);
+    this.router.patch('/user/:id', this.updateUser);
   }
 
   async saveUser(req: Request, res: Response) {
     const { name, email, password, media_id } = req.body;
     try {
-      const user = await usersModel.saveUser(name, email, password, media_id);
+      const user = await usersModel.saveUser({ name, email, password, media_id });
       res.status(201).json({ user });
+    } catch (e) {
+      res.status(400).json({ error: e.message });
+    }
+  }
+
+  async updateUser(req: Request, res: Response) {
+    const { id, ...payload } = req.body;
+    try {
+      const updatedUser = await usersModel.updateUser(id, payload);
+
+      res.status(200).json({ user: updatedUser });
     } catch (e) {
       res.status(400).json({ error: e.message });
     }

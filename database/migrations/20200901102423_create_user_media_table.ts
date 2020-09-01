@@ -8,7 +8,9 @@ export async function up(knex: Knex): Promise<void> {
       return knex.schema.createTable(`${USER_MEDIA}`, (t) => {
         t.increments('id').primary();
         t.string('user_name');
-        t.string('avatar');
+        t.string('description');
+        t.string('src');
+        t.string('purpose');
       });
     }
   });
@@ -19,4 +21,3 @@ export async function down(knex: Knex): Promise<void> {
   return knex.schema
     .dropTableIfExists(USER_MEDIA);
 }
-

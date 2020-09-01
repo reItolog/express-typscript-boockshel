@@ -1,4 +1,5 @@
 import Users from './UserModel';
+import { IUser } from '../../shared/interfaces/users';
 
 class UsersModel {
   constructor(private users = new Users) {
@@ -31,15 +32,23 @@ class UsersModel {
     }
   }
 
-  async saveUser(name: string, email: string, password: string, media_id: string) {
-    const newUser = new Users({
-      name,
-      email,
-      password,
-      media_id,
-    });
+  async saveUser(user: IUser) {
+    const newUser = new Users(user);
     try {
       return await newUser.save();
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
+  async updateUser(id: number, paylod: IUser) {
+    try {
+      const upUser = await this.users.where({ id }).save(paylod, { patch: true })
+        .catch(e => {
+          console.log(e);
+        });
+
+      return upUser;
     } catch (e) {
       throw new Error(e.message);
     }

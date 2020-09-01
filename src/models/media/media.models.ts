@@ -1,4 +1,6 @@
 import Media from './MediaModel';
+import {IMedia} from '../../shared/interfaces/media'
+
 
 class MediaModel {
   constructor(private media = new Media) {
@@ -12,13 +14,8 @@ class MediaModel {
     }
   }
 
-  async saveMedia(url: string, mimetype: string, title: string, description: string ) {
-    const newMedia = new Media({
-      url,
-      'mime type': mimetype,
-      title,
-      description,
-    });
+  async saveMedia(media: IMedia ) {
+    const newMedia = new Media(media);
     try {
       return await newMedia.save().catch(e => {
         console.log(e.message);
