@@ -1,5 +1,5 @@
 import Todo from './TodoModel';
-import { ITodo } from '../../shared/interfaces/todo';
+import { ITodo, ITodoUpdate } from '../../shared/interfaces/todo';
 
 
 class TodoModel {
@@ -12,6 +12,17 @@ class TodoModel {
       return await newTodo.save().then()
         .catch(e => {
           console.log('Error Save Todo', e.message);
+        });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
+  async updateTodo(id: number, payload: ITodoUpdate) {
+    try {
+      return await this.todo.where({ id }).save(payload, { patch: true })
+        .catch(e => {
+          console.log(e.message);
         });
     } catch (e) {
       throw new Error(e.message);

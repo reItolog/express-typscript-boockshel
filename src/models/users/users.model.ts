@@ -22,7 +22,7 @@ class UsersModel {
       )
         .then(use => {
           const userMedia = use.toJSON();
-          console.log(userMedia);
+
           const mimetype = userMedia.avatar.mime_type.split('/')[1]
           return {
             ...userMedia,

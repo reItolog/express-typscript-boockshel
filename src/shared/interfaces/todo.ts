@@ -5,3 +5,10 @@ export interface ITodo{
   compleated?: boolean;
   update_at?: Date;
 }
+
+export interface ITodoUpdate {
+  title?: string;
+  description?: string;
+  compleated?: boolean;
+  update_at?: Date;
+}
