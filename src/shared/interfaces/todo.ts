@@ -2,13 +2,13 @@ export interface ITodo{
   title: string;
   description: string;
   owner_id: number;
-  compleated?: boolean;
+  completed?: boolean;
   update_at?: Date;
 }
 
 export interface ITodoUpdate {
   title?: string;
   description?: string;
-  compleated?: boolean;
+  completed?: boolean;
   update_at?: Date;
 }
