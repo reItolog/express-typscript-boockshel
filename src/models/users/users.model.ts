@@ -16,26 +16,25 @@ class UsersModel {
   }
 
   async findUserById(id: number) {
-    // {
-    //   'avatar': function(qb) {
-    //   //always select the primary Id of the table, otherwise there will be no relations between the tables
-    //   return qb.select('owner_id', 'url'); //Table1Id is omitted!
-    // }
-    // }
+
     try {
       const user: any = await this.users.where({ id }).fetch(
-        { withRelated: ['avatar'] },
+        { withRelated: [ {
+            'avatar': function(qb) {
+              return qb.select('owner_id', 'url', 'mime_type');
+            }
+          }] },
       )
         .then(use => {
-          use.set('fullName', [use.toJSON().first_name, use.toJSON().last_name]);
-
+          const userMedia = use.toJSON();
+          // return userMedia;
           return {
-            ...use.toJSON(),
-            avatar: use.related('avatar').pluck('url'),
+            ...userMedia,
+            avatar: userMedia.avatar.url,
           };
         })
         .catch(e => {
-          console.log('Find User Error', e.message);
+          throw new Error(e.message)
         });
 
       return user;
