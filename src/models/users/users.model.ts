@@ -17,16 +17,17 @@ class UsersModel {
 
   async findUserById(id: number) {
     try {
-      // const fetchOptions = {withRelated: ['avatar']}
-      const user: any = await this.users.where({ id }).fetch( ).catch(e => {
+      const user: any = await this.users.where({ id }).fetch(
+        {withRelated: ['avatar']}
+      ).catch(e => {
         console.log('Find User Error', e.message);
       });
       user.set('fullName', [user.toJSON().first_name, user.toJSON().last_name])
-      console.log(user.fullName);
+      // console.log(user.get('FullName'));
       if (!user) {
         throw new Error(`User not found whith id: ${id}`);
       }
-       // console.log(user.toJSON());
+       console.log(user.toJSON());
 
       return user;
     } catch (e) {
