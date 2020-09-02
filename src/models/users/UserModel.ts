@@ -5,19 +5,18 @@ import Media from '../media/MediaModel';
 const UsersWithVirtuals = bookshelf.Model.extend({
   tableName: USERS,
   media() {
-    // @ts-ignore
     return this.hasMany(Media, 'owner_id');
   },
 
   avatar() {
-
-    return this.media()
+    const userMedia = this.media();
+    return userMedia ?? null;
   },
   virtuals: {
     fullName(): string {
       // @ts-ignore
-      return this.get('first_name') + ' ' + this.get('last_name')
-    }
+      return this.get('first_name') + ' ' + this.get('last_name');
+    },
   },
 });
 

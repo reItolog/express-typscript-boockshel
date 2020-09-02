@@ -17,7 +17,7 @@ class MediaModel {
   async saveMedia(media: IMedia ) {
     const newMedia = new Media(media);
     try {
-      return await newMedia.save().catch(e => {
+      return await newMedia.save().catch((e: any) => {
         console.log(e.message);
       });
 
