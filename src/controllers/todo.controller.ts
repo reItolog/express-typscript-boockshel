@@ -20,7 +20,6 @@ class TodoController implements IControllerBase {
   getTodos = async (req: Request, res: Response) => {
     try {
       const todos = await todoModel.getTodos();
-      console.log(todos);
       res.status(200).json({ todos });
     } catch (e) {
       res.status(400).json({ error: e.message });
