@@ -17,18 +17,23 @@ class UsersModel {
 
   async findUserById(id: number) {
     try {
-     return await this.users.where({ id }).fetch(
-        { withRelated: ['avatar' ] },
+      return await this.users.where({ id }).fetch(
+        { withRelated: ['avatar'] },
       )
         .then(use => {
           const userMedia = use.toJSON();
+          console.log(userMedia);
+          const mimetype = userMedia.avatar.mime_type.split('/')[1]
           return {
             ...userMedia,
-            avatar:  use.related('avatar').pick(['url', 'title']),
+            avatar: {
+              url: `${userMedia.avatar.url}.${mimetype}`,
+              mimetype,
+            },
           };
         })
         .catch(e => {
-          throw new Error(e.message)
+          throw new Error(e.message);
         });
     } catch (e) {
       throw new Error(e.message);

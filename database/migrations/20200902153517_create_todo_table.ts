@@ -7,11 +7,11 @@ export async function up(knex: Knex): Promise<void> {
     if (!exists) {
       return knex.schema.createTable(`${TODO}`, (t) => {
         t.increments('id').primary();
-        t.integer('owner_id');
+        t.integer('owner_id').notNullable();
         t.foreign('owner_id').references('id').inTable('Users');
         t.string('title', 80).notNullable();
         t.string('description', 255).notNullable();
-        t.boolean('compleated').defaultTo(false);
+        t.boolean('completed').defaultTo(false);
         t.timestamp('created_at').defaultTo(knex.fn.now());
         t.timestamp('update_at').defaultTo(knex.fn.now());
       });

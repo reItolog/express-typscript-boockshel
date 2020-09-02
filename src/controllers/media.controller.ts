@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
+import { join } from 'path';
 import multer from 'multer';
 import IControllerBase from 'interfaces/IControllerBase.interface';
 import { mediaModel } from '../models/media/media.models';
@@ -8,7 +9,7 @@ import { IMedia } from '../shared/interfaces/media';
 class MediaController implements IControllerBase {
   public path = '/';
   public router = express.Router();
-  public upload = multer({ dest: 'uploads/' });
+  public upload = multer({ dest: join(process.cwd(), 'public', 'uploads') });
 
   constructor() {
     this.initRoutes();
