@@ -16,28 +16,20 @@ class UsersModel {
   }
 
   async findUserById(id: number) {
-
     try {
-      const user: any = await this.users.where({ id }).fetch(
-        { withRelated: [ {
-            'avatar': function(qb) {
-              return qb.select('owner_id', 'url', 'mime_type');
-            }
-          }] },
+     return await this.users.where({ id }).fetch(
+        { withRelated: ['avatar' ] },
       )
         .then(use => {
           const userMedia = use.toJSON();
-          // return userMedia;
           return {
             ...userMedia,
-            avatar: userMedia.avatar.url,
+            avatar:  use.related('avatar').pick(['url', 'title']),
           };
         })
         .catch(e => {
           throw new Error(e.message)
         });
-
-      return user;
     } catch (e) {
       throw new Error(e.message);
     }
