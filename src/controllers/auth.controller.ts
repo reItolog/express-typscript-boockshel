@@ -27,6 +27,7 @@ class AuthController implements IControllerBase {
   registration = async (req: Request, res: Response) => {
     const payload: IUser = req.body;
     try {
+      //TODO: create utils fn
       const salt = await bcrypt.genSalt(this.saltRounds);
       payload.password = await bcrypt.hash(payload.password, salt);
 
@@ -47,7 +48,7 @@ class AuthController implements IControllerBase {
       if (!user) {
         return res.send(`user whith email ${email} not found`);
       }
-
+      //TODO: create utils fn
       const isMatchPassword = await bcrypt.compare(password, user.password!);
 
       if (!isMatchPassword) {
