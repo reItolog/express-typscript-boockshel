@@ -55,7 +55,8 @@ class AuthController implements IControllerBase {
         return res.status(401).send('wrong password');
       }
 
-      const token = await jwt.sign({
+      //TODO: make async(add cb(err, token))
+      const token = jwt.sign({
           id: user.id,
         },
         config.PASSPORT_JWT_SECRET,
