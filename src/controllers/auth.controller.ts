@@ -52,7 +52,7 @@ class AuthController implements IControllerBase {
       const isMatchPassword = await bcrypt.compare(password, user.password!);
 
       if (!isMatchPassword) {
-        return res.status(401).send('wrong password');
+        return res.status(401).send('wrong password or email');
       }
 
       //TODO: make async(add cb(err, token))
