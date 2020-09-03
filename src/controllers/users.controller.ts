@@ -2,7 +2,6 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import IControllerBase from 'interfaces/IControllerBase.interface';
 import { usersModel } from '../models/users/users.model';
-import { IUser } from '../shared/interfaces/users';
 
 class UsersController implements IControllerBase {
   public path = '/';
@@ -13,21 +12,10 @@ class UsersController implements IControllerBase {
   }
 
   public initRoutes() {
-    this.router.post('/user', this.saveUser);
     this.router.get('/users', this.getAllUsers);
     this.router.get('/user/:id', this.getUser);
     this.router.delete('/user/:id', this.removeUser);
     this.router.patch('/user/:id', this.updateUser);
-  }
-
-  async saveUser(req: Request, res: Response) {
-    const payload: IUser = req.body;
-    try {
-      const user = await usersModel.saveUser(payload);
-      res.status(201).json({ user });
-    } catch (e) {
-      res.status(400).json({ error: e.message });
-    }
   }
 
   async updateUser(req: Request, res: Response) {

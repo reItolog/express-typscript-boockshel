@@ -2,6 +2,7 @@ import App from './app';
 import MediaController from './controllers/media.controller';
 import UsersController from './controllers/users.controller';
 import TodoController from './controllers/todo.controller';
+import AuthController from './controllers/auth.controller';
 
 import BodyParserMiddleware from './middlewares/body-parser';
 import StaticMiddleware from './middlewares/static';
@@ -13,6 +14,7 @@ const app = new App({
     new MediaController(),
     new UsersController(),
     new TodoController(),
+    new AuthController(),
   ],
   middleWares: [
     BodyParserMiddleware,
