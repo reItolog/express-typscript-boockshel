@@ -1,5 +1,5 @@
 import Users from './UserModel';
-import { IUser } from '../../shared/interfaces/users';
+import { IUser, IUserMedia } from '../../shared/interfaces/users';
 
 class UsersModel {
   constructor(
@@ -21,15 +21,16 @@ class UsersModel {
         { withRelated: ['avatar'] },
       )
         .then(use => {
-          const userMedia = use.toJSON();
+          const userMedia: IUserMedia = use.toJSON();
 
-          const mimetype = userMedia.avatar.mime_type.split('/')[1]
+          if (!userMedia.avatar) {
+            return userMedia;
+          }
+
+          const mimetype = userMedia.avatar.mime_type.split('/')[1];
           return {
             ...userMedia,
-            avatar: {
-              url: `${userMedia.avatar.url}.${mimetype}`,
-              mimetype,
-            },
+            avatar: `${userMedia.avatar.url}.${mimetype}`,
           };
         })
         .catch(e => {

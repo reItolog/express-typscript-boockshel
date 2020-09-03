@@ -32,6 +32,7 @@ class UsersController implements IControllerBase {
   async getAllUsers(req: Request, res: Response) {
     try {
       const results = await usersModel.findAll();
+
       res.status(200).json({ users: results });
     } catch (error) {
       res.status(400).json({ error });

@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import IControllerBase from 'interfaces/IControllerBase.interface';
 
+import AuthService from '../services/auth.service';
 import { usersModel } from '../models/users/users.model';
 import { IUser } from '../shared/interfaces/users';
 
@@ -11,7 +12,7 @@ class AuthController implements IControllerBase {
   public router = express.Router();
   private saltRounds = 10;
 
-  constructor() {
+  constructor(private authService = new AuthService) {
     this.initRoutes();
   }
 
@@ -22,8 +23,8 @@ class AuthController implements IControllerBase {
   registration = async (req: Request, res: Response) => {
     const payload: IUser = req.body;
     try {
-      const salt = await bcrypt.genSalt(this.saltRounds)
-      payload.password = await bcrypt.hash(payload.password, salt)
+      const salt = await bcrypt.genSalt(this.saltRounds);
+      payload.password = await bcrypt.hash(payload.password, salt);
 
       await usersModel.saveUser(payload);
 
@@ -31,6 +32,10 @@ class AuthController implements IControllerBase {
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }
+  };
+
+  login = async (req: Request, res: Response) => {
+
   };
 
 }
