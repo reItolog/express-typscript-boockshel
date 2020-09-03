@@ -41,6 +41,18 @@ class UsersModel {
     }
   }
 
+  async findUserByEmail(email: string) {
+    try {
+      return await this.users.where({ email }).fetch()
+        .then(user => user.toJSON())
+        .catch(e => {
+          console.log(e.message);
+        });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
   async saveUser(user: IUser) {
     const newUser = new Users(user);
 
