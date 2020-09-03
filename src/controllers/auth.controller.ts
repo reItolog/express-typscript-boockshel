@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 import config from '../config.json';
 import IControllerBase from 'interfaces/IControllerBase.interface';
-import AuthService from '../services/auth.service';
+import { authJwt } from '../services/auth.service';
 import { usersModel } from '../models/users/users.model';
 import { IUser } from '../shared/interfaces/users';
 
@@ -14,15 +14,14 @@ class AuthController implements IControllerBase {
   public router = express.Router();
   private saltRounds = 10;
 
-  constructor(private authService = new AuthService) {
+  constructor() {
     this.initRoutes();
   }
 
   public initRoutes() {
     this.router.post('/registration', this.registration);
     this.router.post('/login', this.login);
-    // @ts-ignore
-    this.router.get('/protected',this.protected);
+    this.router.get('/protected', authJwt, this.protected);
   }
 
   registration = async (req: Request, res: Response) => {
@@ -69,7 +68,7 @@ class AuthController implements IControllerBase {
   };
 
   protected = async (req: Request, res: Response) => {
-    console.log(req.headers.authorization);
+    console.log('auth', req.headers.authorization);
     res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
   }
 
