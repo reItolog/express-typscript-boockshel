@@ -2,7 +2,7 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 import { todoModel } from '../models/todo/todo.model';
 import IControllerBase from 'interfaces/IControllerBase.interface';
-import { ITodo, ITodoUpdate } from '../shared/interfaces/todo';
+import { ITodo } from '../shared/interfaces/todo';
 
 class TodoController implements IControllerBase {
   public path = '/';
@@ -16,6 +16,7 @@ class TodoController implements IControllerBase {
     this.router.post('/todo', this.saveTodo);
     this.router.get('/todo', this.getTodos);
     this.router.patch('/todo', this.updateTodo);
+    this.router.delete('/todo/:id', this.removeTodo);
   }
 
   getTodos = async (req: Request, res: Response) => {
@@ -29,10 +30,11 @@ class TodoController implements IControllerBase {
 
   updateTodo = async (req: Request, res: Response) => {
     const { id, ...payload } = req.body;
+    console.log(payload);
     try {
       const updatedTodo = await todoModel.updateTodo(id, payload);
 
-      //TODO: status code for updete
+      //TODO: status code for update
       res.status(200).json({ todo: updatedTodo });
     } catch (e) {
       res.status(400).json({ error: e.message });
@@ -51,6 +53,16 @@ class TodoController implements IControllerBase {
       res.status(201).json({ todo: newTodo });
     } catch (error) {
       res.json({ error });
+    }
+  };
+
+  removeTodo = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+      await todoModel.deleteTodo(Number(id));
+      res.status(200).send(`todo ${id} deleted`);
+    } catch (e) {
+      res.status(400).json({ error: e.message });
     }
   };
 }

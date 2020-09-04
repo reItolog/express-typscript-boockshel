@@ -29,6 +29,17 @@ class TodoModel {
     }
   }
 
+  async deleteTodo(id: number) {
+    try {
+      return await this.todo.where({ id }).destroy()
+        .catch(e => {
+          console.log(e.message);
+        });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+
   async getTodos() {
     try {
       return await this.todo.fetchAll()

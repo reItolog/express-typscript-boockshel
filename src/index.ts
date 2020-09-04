@@ -7,6 +7,7 @@ import AuthController from './controllers/auth.controller';
 import BodyParserMiddleware from './middlewares/body-parser';
 import StaticMiddleware from './middlewares/static';
 import loggerMiddleware from './middlewares/logger';
+import CorsMiddleware from './middlewares/cors';
 
 const app = new App({
   port: 5000,
@@ -20,6 +21,7 @@ const app = new App({
     BodyParserMiddleware,
     loggerMiddleware,
     StaticMiddleware,
+    CorsMiddleware
   ],
 });
 

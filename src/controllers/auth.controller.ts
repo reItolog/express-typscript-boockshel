@@ -9,6 +9,8 @@ import { usersModel } from '../models/users/users.model';
 import { IUser } from '../shared/interfaces/users';
 import { hash, compare } from '../shared/utils/bCrypt';
 
+import cors from 'cors'
+
 class AuthController implements IControllerBase {
   public path = '/';
   public router = express.Router();
@@ -19,7 +21,7 @@ class AuthController implements IControllerBase {
 
   public initRoutes() {
     this.router.post('/signup', this.signup);
-    this.router.post('/signin', this.signin);
+    this.router.post('/signin',  cors(), this.signin);
     this.router.get('/protected', authJwt, this.protected);
   }
 
