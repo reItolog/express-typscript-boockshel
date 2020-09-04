@@ -1,6 +1,5 @@
 import * as express from 'express';
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import config from '../config.json';
@@ -8,38 +7,40 @@ import IControllerBase from 'interfaces/IControllerBase.interface';
 import { authJwt } from '../services/auth.service';
 import { usersModel } from '../models/users/users.model';
 import { IUser } from '../shared/interfaces/users';
+import { hash, compare } from '../shared/utils/bCrypt';
 
 class AuthController implements IControllerBase {
   public path = '/';
   public router = express.Router();
-  private saltRounds = 10;
 
   constructor() {
     this.initRoutes();
   }
 
   public initRoutes() {
-    this.router.post('/registration', this.registration);
-    this.router.post('/login', this.login);
+    this.router.post('/signup', this.signup);
+    this.router.post('/signin', this.signin);
     this.router.get('/protected', authJwt, this.protected);
   }
 
-  registration = async (req: Request, res: Response) => {
+  signup = async (req: Request, res: Response) => {
     const payload: IUser = req.body;
     try {
-      //TODO: create utils fn
-      const salt = await bcrypt.genSalt(this.saltRounds);
-      payload.password = await bcrypt.hash(payload.password, salt);
+      if (!payload.password?.trim()) {
+        return res.send('enter your password');
+      }
 
-      await usersModel.saveUser(payload);
+      payload.password = await hash(payload.password, 10);
 
-      res.status(201).send('user registration success');
+      const newUser = await usersModel.saveUser(payload);
+
+      res.status(201).json({ user: newUser });
     } catch (e) {
       return res.status(400).json({ error: e.message });
     }
   };
 
-  login = async (req: Request, res: Response) => {
+  signin = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     try {
@@ -48,8 +49,8 @@ class AuthController implements IControllerBase {
       if (!user) {
         return res.send(`user whith email ${email} not found`);
       }
-      //TODO: create utils fn
-      const isMatchPassword = await bcrypt.compare(password, user.password!);
+
+      const isMatchPassword = await compare(password, user.password!);
 
       if (!isMatchPassword) {
         return res.status(401).send('wrong password or email');
@@ -60,9 +61,11 @@ class AuthController implements IControllerBase {
           id: user.id,
         },
         config.PASSPORT_JWT_SECRET,
-        {  expiresIn: '1h' });
+        { expiresIn: '1m' },
+      );
 
-      res.status(200).json({ token : `Bearer ${token}`,  userId: user.id });
+
+      res.status(200).json({ token, userId: user.id });
     } catch (e) {
       res.status(401).json({ error: e.message });
     }
@@ -70,9 +73,11 @@ class AuthController implements IControllerBase {
   };
 
   protected = async (req: Request, res: Response) => {
-    console.log('auth', req.headers.authorization);
-    res.status(200).json({ success: true, msg: "You are successfully authenticated to this route!"});
-  }
+    res.status(200).json({
+      success: true,
+      msg: 'You are successfully authenticated to this route!',
+    });
+  };
 
 }
 

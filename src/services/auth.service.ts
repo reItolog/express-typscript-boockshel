@@ -3,7 +3,7 @@ import {
   Strategy as JWTStrategy,
   ExtractJwt,
 } from 'passport-jwt';
-import {usersModel} from '../models/users/users.model';
+import { usersModel } from '../models/users/users.model';
 import config from '../config.json';
 
 const jwtOpts = {
@@ -13,12 +13,11 @@ const jwtOpts = {
 };
 
 
-
 const jwtStrategy = new JWTStrategy(jwtOpts, async (payload, done) => {
   try {
-    console.log(payload);
-    // Identify user by ID
-    const user = await usersModel.findUserById(payload.id);
+    const user = await usersModel.findUserById(payload.id).catch(e => {
+      console.log('user from jwtAuth not found')
+    });
 
     if (!user) {
       return done(null, false);
