@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
         t.increments('id').primary();
         t.string('first_name', 100).notNullable();
         t.string('last_name', 100).notNullable();
-        t.string('email', 100).notNullable();
+        t.string('email', 100).unique().notNullable();
         t.string('avatar', 255).nullable();
         t.string('password').notNullable();
       });

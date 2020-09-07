@@ -23,19 +23,19 @@ class UsersController implements IControllerBase {
     try {
       const updatedUser = await usersModel.updateUser(id, payload);
 
-      res.status(200).json({ user: updatedUser });
+      res.status(200).json({ data: updatedUser, error: null });
     } catch (e) {
-      res.status(400).json({ error: e.message });
+      res.status(400).json({ data: null, error: e.message });
     }
   }
 
   async getAllUsers(req: Request, res: Response) {
     try {
-      const results = await usersModel.findAll();
+      const users = await usersModel.findAll();
 
-      res.status(200).json({ users: results });
+      res.status(200).json({ data: users, error: null });
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(400).json({ data: null, error });
     }
   }
 
@@ -44,10 +44,10 @@ class UsersController implements IControllerBase {
     try {
       const user = await usersModel.findUserById(id);
 
-      res.status(200).json({ user });
+      res.status(200).json({ data: user, error: null });
     } catch (error) {
       console.log(error.message);
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ data: null, error: error.message });
     }
   }
 
@@ -55,9 +55,9 @@ class UsersController implements IControllerBase {
     const id = Number(req.params.id);
     try {
       await usersModel.removeUser(id);
-      res.end(`user deleted with id ${id}`);
+      res.status(200).json({ data: `user deleted with id ${id}`, error: null });
     } catch (error) {
-      res.status(400).json({ error: error.message });
+      res.status(400).json({ data: null, error: error.message });
     }
   }
 

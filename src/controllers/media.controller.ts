@@ -33,18 +33,18 @@ class MediaController implements IControllerBase {
     try {
       const mediRes = await mediaModel.saveMedia(newMedia);
 
-      res.json({ media: mediRes });
+      res.json({ data: mediRes, error: null });
     } catch (error) {
-      res.json({ error });
+      res.json({ data: null, error });
     }
   };
 
   getAllMedia = async (req: Request, res: Response) => {
     try {
       const mediRes = await mediaModel.getAllMedia();
-      res.json({ media: mediRes });
+      res.json({ data: mediRes, error: null });
     } catch (error) {
-      res.json({ error });
+      res.json({ data: null, error });
     }
   };
 }

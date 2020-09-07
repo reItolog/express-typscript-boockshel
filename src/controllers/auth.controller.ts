@@ -9,7 +9,7 @@ import { usersModel } from '../models/users/users.model';
 import { IUser } from '../shared/interfaces/users';
 import { hash, compare } from '../shared/utils/bCrypt';
 
-import cors from 'cors'
+import cors from 'cors';
 
 class AuthController implements IControllerBase {
   public path = '/';
@@ -21,12 +21,13 @@ class AuthController implements IControllerBase {
 
   public initRoutes() {
     this.router.post('/signup', this.signup);
-    this.router.post('/signin',  cors(), this.signin);
+    this.router.post('/signin', cors(), this.signin);
     this.router.get('/protected', authJwt, this.protected);
   }
 
   signup = async (req: Request, res: Response) => {
     const payload: IUser = req.body;
+
     try {
       if (!payload.password?.trim()) {
         return res.send('enter your password');
@@ -35,10 +36,18 @@ class AuthController implements IControllerBase {
       payload.password = await hash(payload.password, 10);
 
       const newUser = await usersModel.saveUser(payload);
+      const { password, ...user } = newUser.toJSON();
 
-      res.status(201).json({ user: newUser });
+
+      res.status(201).json({ data: user, error: null });
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      if (e.message.includes('ER_DUP_ENTRY')) {
+        res.json({ data: null, error: 'email already exists' });
+
+      } else {
+        res.status(400).json({ data: null, error: e.message });
+      }
+
     }
   };
 
@@ -49,13 +58,21 @@ class AuthController implements IControllerBase {
       const user = await usersModel.findUserByEmail(email);
 
       if (!user) {
-        return res.send(`user whith email ${email} not found`);
+        // IN PROD send 'wrong password or email'
+        return res.json({
+          data: null,
+          error: `user whith email ${email} not found`,
+        });
       }
 
       const isMatchPassword = await compare(password, user.password!);
 
       if (!isMatchPassword) {
-        return res.status(401).send('wrong password or email');
+        // IN PROD send 'wrong password or email'
+        return res.json({
+          data: null,
+          error: 'wrong password'
+        });
       }
 
       //TODO: make async(add cb(err, token))
@@ -67,9 +84,9 @@ class AuthController implements IControllerBase {
       );
 
 
-      res.status(200).json({ token, userId: user.id });
+      res.status(200).json({ data: { token, userId: user.id }, error: null });
     } catch (e) {
-      res.status(401).json({ error: e.message });
+      res.status(400).json({ data: null, error: e.message });
     }
 
   };

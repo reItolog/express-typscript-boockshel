@@ -22,9 +22,9 @@ class TodoController implements IControllerBase {
   getTodos = async (req: Request, res: Response) => {
     try {
       const todos = await todoModel.getTodos();
-      res.status(200).json({ todos });
+      res.status(200).json({ data: todos, error: null });
     } catch (e) {
-      res.status(400).json({ error: e.message });
+      res.status(400).json({ data: null, error: e.message });
     }
   };
 
@@ -35,9 +35,9 @@ class TodoController implements IControllerBase {
       const updatedTodo = await todoModel.updateTodo(id, payload);
 
       //TODO: status code for update
-      res.status(200).json({ todo: updatedTodo });
+      res.status(200).json({ data: updatedTodo, error: null });
     } catch (e) {
-      res.status(400).json({ error: e.message });
+      res.status(400).json({ data: null, error: e.message });
     }
   };
 
@@ -50,9 +50,9 @@ class TodoController implements IControllerBase {
     };
     try {
       const newTodo = await todoModel.saveTodo(newMedia);
-      res.status(201).json({ todo: newTodo });
+      res.status(201).json({ data: newTodo, error: null });
     } catch (error) {
-      res.json({ error });
+      res.json({ data: null, error });
     }
   };
 
@@ -60,9 +60,9 @@ class TodoController implements IControllerBase {
     const { id } = req.params;
     try {
       await todoModel.deleteTodo(Number(id));
-      res.status(200).send(`todo ${id} deleted`);
+      res.status(200).json({ data: `todo ${id} deleted`, error: null });
     } catch (e) {
-      res.status(400).json({ error: e.message });
+      res.status(400).json({ data: null, error: e.message });
     }
   };
 }
