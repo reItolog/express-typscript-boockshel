@@ -9,7 +9,9 @@ import { usersModel } from '../models/users/users.model';
 import { IUser } from '../shared/interfaces/users';
 import { hash, compare } from '../shared/utils/bCrypt';
 
-import { SigninValidateMiddleware, SignupValidateMiddleware }  from '../middlewares/validate'
+import { firebaseAuthService } from '../services/firebaseAuth.service';
+
+import { SigninWithEmailValidateMiddleware, SignupValidateMiddleware } from '../middlewares/validate';
 
 class AuthController implements IControllerBase {
   public path = '/';
@@ -20,9 +22,10 @@ class AuthController implements IControllerBase {
   }
 
   public initRoutes() {
-    this.router.post('/signup', SignupValidateMiddleware ,this.signup);
-    this.router.post('/signin', SigninValidateMiddleware , this.signin);
+    this.router.post('/signup', SignupValidateMiddleware, this.signup);
+    this.router.post('/signinWithEmail', SigninWithEmailValidateMiddleware, this.signinWithEmail);
     this.router.get('/protected', authJwt, this.protected);
+    this.router.get('/getuser', this.getUser);
   }
 
   signup = async (req: Request, res: Response) => {
@@ -35,60 +38,44 @@ class AuthController implements IControllerBase {
 
       payload.password = await hash(payload.password, 10);
 
-      const newUser = await usersModel.saveUser(payload);
-      const { password, ...user } = newUser.toJSON();
+      // const newUser = await usersModel.saveUser(payload);
+      // const { password, ...user } = newUser.toJSON();
 
+      const newUser = await firebaseAuthService.createUser(payload);
 
-      res.status(201).json({ data: user, error: null });
+      res.status(201).json({ data: newUser, error: null });
     } catch (e) {
       if (e.message.includes('ER_DUP_ENTRY')) {
         res.json({ data: null, error: 'email already exists' });
 
       } else {
-        res.status(400).json({ data: null, error: e.message });
+        res.json({ data: null, error: e.message });
       }
-
     }
   };
 
-  signin = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+  signinWithEmail = async (req: Request, res: Response) => {
+    const { email } = req.body;
 
     try {
-      const user = await usersModel.findUserByEmail(email);
+      await firebaseAuthService.signInWithLinkEmail(email);
 
-      if (!user) {
-        // IN PROD send 'wrong password or email'
-        return res.json({
-          data: null,
-          error: `user whith email ${email} not found`,
-        });
-      }
-
-      const isMatchPassword = await compare(password, user.password!);
-
-      if (!isMatchPassword) {
-        // IN PROD send 'wrong password or email'
-        return res.json({
-          data: null,
-          error: 'wrong password',
-        });
-      }
-
-      //TODO: make async(add cb(err, token))
-      const token = jwt.sign({
-          id: user.id,
-        },
-        config.PASSPORT_JWT_SECRET,
-        { expiresIn: '1m' },
-      );
-
-
-      res.status(200).json({ data: { token, userId: user.id }, error: null });
+      res.status(200).json({ data: { message: 'we send confirm link in your email' }, error: null });
     } catch (e) {
       res.status(400).json({ data: null, error: e.message });
     }
+  };
 
+  getUser= async (req: Request, res: Response) => {
+    const { email } = req.body;
+
+    try {
+      const user = await firebaseAuthService.getUser();
+
+      res.status(200).json({ data: user, error: null });
+    } catch (e) {
+      res.status(400).json({ data: null, error: e.message });
+    }
   };
 
   protected = async (req: Request, res: Response) => {

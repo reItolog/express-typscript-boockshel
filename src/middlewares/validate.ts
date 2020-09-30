@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { string, object } from 'yup';
 
-const SigninValidateMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+const SigninWithEmailValidateMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const signinType = object({
     email: string().email().required().trim(),
-    password: string().required().trim(),
 
   });
   try {
@@ -36,4 +35,4 @@ const SignupValidateMiddleware = async (req: Request, res: Response, next: NextF
 };
 
 
-export { SigninValidateMiddleware, SignupValidateMiddleware };
+export { SigninWithEmailValidateMiddleware, SignupValidateMiddleware };
