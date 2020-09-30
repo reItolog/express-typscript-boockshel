@@ -1,7 +1,8 @@
 import { nodemailerConfig } from '../shared/config/nodemailerConfig';
 
 class NodemailerService {
-
+  constructor() {
+  }
 }
 
-const nodemailerService = new NodemailerService();
+export default NodemailerService;
