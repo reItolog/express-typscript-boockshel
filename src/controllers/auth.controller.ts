@@ -9,7 +9,7 @@ import { usersModel } from '../models/users/users.model';
 import { IUser } from '../shared/interfaces/users';
 import { hash, compare } from '../shared/utils/bCrypt';
 
-import cors from 'cors';
+import { SigninValidateMiddleware, SignupValidateMiddleware }  from '../middlewares/validate'
 
 class AuthController implements IControllerBase {
   public path = '/';
@@ -20,8 +20,8 @@ class AuthController implements IControllerBase {
   }
 
   public initRoutes() {
-    this.router.post('/signup', this.signup);
-    this.router.post('/signin', cors(), this.signin);
+    this.router.post('/signup', SignupValidateMiddleware ,this.signup);
+    this.router.post('/signin', SigninValidateMiddleware , this.signin);
     this.router.get('/protected', authJwt, this.protected);
   }
 
@@ -71,7 +71,7 @@ class AuthController implements IControllerBase {
         // IN PROD send 'wrong password or email'
         return res.json({
           data: null,
-          error: 'wrong password'
+          error: 'wrong password',
         });
       }
 
