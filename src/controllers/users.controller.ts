@@ -18,7 +18,6 @@ class UsersController implements IControllerBase {
     this.router.get('/user/:id', this.getUser);
     this.router.delete('/user/:id', this.removeUser);
     this.router.patch('/user/:id', this.updateUser);
-    this.router.post('/verify-email', this.verifyEmail);
   }
 
   async updateUser(req: Request, res: Response) {
@@ -42,16 +41,6 @@ class UsersController implements IControllerBase {
     }
   }
 
-  async verifyEmail(req: Request, res: Response) {
-    const { actionCode } = req.body;
-    try {
-       await firebaseAuthService.verifyEmail(actionCode);
-
-      res.status(200).json({ data: 'email success verified', error: null });
-    } catch (error) {
-      res.status(400).json({ data: null, error });
-    }
-  }
 
   async getUser(req: Request, res: Response) {
     const id = Number(req.params.id);

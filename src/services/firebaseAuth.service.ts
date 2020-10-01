@@ -75,7 +75,6 @@ class FirebaseAuthService {
     try{
       return await this.firebase.auth().applyActionCode(actionCode)
     }catch (e) {
-      console.log(e);
       throw new Error(e.message)
     }
   }

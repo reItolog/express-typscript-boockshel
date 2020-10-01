@@ -29,6 +29,7 @@ class AuthController implements IControllerBase {
     );
     this.router.get('/protected', authJwt, this.protected);
     this.router.get('/getuser', this.getUser);
+    this.router.post('/verify-email', this.verifyEmail);
   }
 
   signup = async (req: Request, res: Response) => {
@@ -61,22 +62,21 @@ class AuthController implements IControllerBase {
         password,
       );
 
-      //
-      // const loginedUser = {
-      //   uid: user?.uid,
-      //   email_verified: user?.emailVerified,
-      //   displayName: user?.displayName,
-      //   email: user?.email,
-      //   photoURL: user?.photoURL,
-      //   phoneNumber: user?.phoneNumber,
-      //   token: user?.refreshToken
-      //   // token: user?.stsTokenManager?.accessToken
-      // }
-      //
-      // console.log(user);
+      const token  = await  user?.getIdTokenResult( ).then(r => r.token)
+
+      const loginedUser = {
+        uid: user?.uid,
+        email_verified: user?.emailVerified,
+        displayName: user?.displayName,
+        email: user?.email,
+        photoURL: user?.photoURL,
+        phoneNumber: user?.phoneNumber,
+        token
+      }
+
 
       res.status(200).json({
-        data: user,
+        data: loginedUser,
         error: null,
       });
     } catch (e) {
@@ -85,7 +85,6 @@ class AuthController implements IControllerBase {
   };
 
   getUser = async (req: Request, res: Response) => {
-    const { email } = req.body;
 
     try {
       const user = await firebaseAuthService.getUser();
@@ -102,6 +101,18 @@ class AuthController implements IControllerBase {
       msg: 'You are successfully authenticated to this route!',
     });
   };
+
+  async verifyEmail(req: Request, res: Response) {
+    const { actionCode } = req.body;
+    try {
+      await firebaseAuthService.verifyEmail(actionCode);
+
+      res.status(200).json({ data: 'email success verified', error: null });
+    } catch (error) {
+      res.status(400).json({ data: null, error });
+    }
+  }
+
 }
 
 export default AuthController;
