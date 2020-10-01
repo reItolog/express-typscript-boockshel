@@ -61,7 +61,7 @@ class AuthController implements IControllerBase {
         email,
         password,
       );
-
+      
       const token  = await  user?.getIdTokenResult( ).then(r => r.token)
 
       const loginedUser = {
@@ -80,7 +80,7 @@ class AuthController implements IControllerBase {
         error: null,
       });
     } catch (e) {
-      res.status(400).json({ data: null, error: e.message });
+      res.json({ data: null, error: e.message });
     }
   };
 
