@@ -1,9 +1,16 @@
-export const nodemailerConfig = {
-  host: 'smtp.ethereal.email',
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: 'testAccount.user', // generated ethereal user
-    pass: 'testAccount.pass', // generated ethereal password
-  },
-};
+import * as nodemailer from 'nodemailer';
+
+export async function nodemailerConfig() {
+  const testAccount = await nodemailer.createTestAccount();
+
+  return {
+    service: 'gmail',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'serhiirmn@gmail.com',
+      pass: 'reparol14'
+    }
+  };
+}
+
