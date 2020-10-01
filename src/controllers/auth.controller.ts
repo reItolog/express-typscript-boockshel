@@ -40,9 +40,9 @@ class AuthController implements IControllerBase {
         password,
         displayName: `${first_name} ${last_name}`,
       };
-      const newUser = await firebaseAuthService.createUser(userPayload);
+      await firebaseAuthService.createUser(userPayload);
 
-      res.status(201).json({ data: newUser, error: null });
+      res.status(201).json({ data: 'We send verify email link to your Email address', error: null });
     } catch (e) {
       if (e.message.includes('ER_DUP_ENTRY')) {
         res.json({ data: null, error: 'email already exists' });
@@ -52,31 +52,28 @@ class AuthController implements IControllerBase {
     }
   };
 
-  signinWithEmail = async (req: Request, res: Response) => {
-    const { email } = req.body;
-
-    try {
-      await firebaseAuthService.signInWithLinkEmail(email);
-
-      res.status(200).json({
-        data: { message: 'we send confirm link in your email' },
-        error: null,
-      });
-    } catch (e) {
-      res.status(400).json({ data: null, error: e.message });
-    }
-  };
-
   signinWithEmailAndPassword = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     try {
-      const user = await firebaseAuthService.signInWithEmailAndPassword(
+      const { user } = await firebaseAuthService.signInWithEmailAndPassword(
         email,
         password,
       );
 
-      console.log(user);
+      //
+      // const loginedUser = {
+      //   uid: user?.uid,
+      //   email_verified: user?.emailVerified,
+      //   displayName: user?.displayName,
+      //   email: user?.email,
+      //   photoURL: user?.photoURL,
+      //   phoneNumber: user?.phoneNumber,
+      //   token: user?.refreshToken
+      //   // token: user?.stsTokenManager?.accessToken
+      // }
+      //
+      // console.log(user);
 
       res.status(200).json({
         data: user,

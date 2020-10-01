@@ -6,13 +6,13 @@ import { firebaseConfig } from '../shared/config/firebaseConfig';
 import { IUser } from '../shared/interfaces/users';
 
 class FirebaseAuthService {
-  private redirectSucessUrl = 'https://95a9e888e72f.ngrok.io';
+  private redirectSucessUrl = 'https://a2afccaa6a7c.ngrok.io';
   private admin;
   private firebase;
   private actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be whitelisted in the Firebase Console.
-    url: `${this.redirectSucessUrl}/email-success-verify`,
+    url: `${this.redirectSucessUrl}/auth/signin`,
     // This must be true.
     handleCodeInApp: true,
   };
@@ -57,17 +57,6 @@ class FirebaseAuthService {
       return await this.firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
-      // console.log(object)
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  }
-
-  async signInWithLinkEmail(email: string) {
-    try {
-      return await this.firebase
-        .auth()
-        .sendSignInLinkToEmail(email, this.actionCodeSettings);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -75,11 +64,19 @@ class FirebaseAuthService {
 
   async getUser() {
     try {
-      const user = await this.admin.auth().listUsers();
-      // console.log(user);
-      return user;
+      return await this.admin.auth().listUsers();
     } catch (e) {
       throw new Error(e.message);
+    }
+  }
+
+
+  async verifyEmail(actionCode: string) {
+    try{
+      return await this.firebase.auth().applyActionCode(actionCode)
+    }catch (e) {
+      console.log(e);
+      throw new Error(e.message)
     }
   }
 }
