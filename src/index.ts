@@ -4,10 +4,12 @@ import UsersController from './controllers/users.controller';
 import TodoController from './controllers/todo.controller';
 import AuthController from './controllers/auth.controller';
 
-import BodyParserMiddleware from './middlewares/body-parser';
-import StaticMiddleware from './middlewares/static';
-import loggerMiddleware from './middlewares/logger';
-import CorsMiddleware from './middlewares/cors';
+import {
+  BodyParserMiddleware,
+  StaticMiddleware,
+  loggerMiddleware,
+  CorsMiddleware,
+} from './middlewares';
 
 const app = new App({
   port: 5000,
@@ -21,7 +23,7 @@ const app = new App({
     BodyParserMiddleware,
     loggerMiddleware,
     StaticMiddleware,
-    CorsMiddleware
+    CorsMiddleware,
   ],
 });
 

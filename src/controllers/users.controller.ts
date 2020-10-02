@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import IControllerBase from 'interfaces/IControllerBase.interface';
 import { usersModel } from '../models/users/users.model';
 
+import { VerifyTokenMiddleware } from '../middlewares';
+
 import { firebaseAuthService } from '../services/firebaseAuth.service';
 
 class UsersController implements IControllerBase {
@@ -14,7 +16,7 @@ class UsersController implements IControllerBase {
   }
 
   public initRoutes() {
-    this.router.get('/users', this.getAllUsers);
+    this.router.get('/users', VerifyTokenMiddleware, this.getAllUsers);
     this.router.get('/user/:id', this.getUser);
     this.router.delete('/user/:id', this.removeUser);
     this.router.patch('/user/:id', this.updateUser);
@@ -37,7 +39,7 @@ class UsersController implements IControllerBase {
 
       res.status(200).json({ data: users, error: null });
     } catch (error) {
-      res.status(400).json({ data: null, error });
+      res.json({ data: null, error });
     }
   }
 

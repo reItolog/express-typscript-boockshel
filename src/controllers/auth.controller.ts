@@ -10,7 +10,8 @@ import { firebaseAuthService } from '../services/firebaseAuth.service';
 import {
   SigninValidateMiddleware,
   SignupValidateMiddleware,
-} from '../middlewares/validate';
+  VerifyTokenMiddleware
+} from '../middlewares';
 
 class AuthController implements IControllerBase {
   public path = '/';
@@ -27,7 +28,7 @@ class AuthController implements IControllerBase {
       SigninValidateMiddleware,
       this.signinWithEmailAndPassword,
     );
-    this.router.get('/protected', authJwt, this.protected);
+    this.router.get('/protected', VerifyTokenMiddleware, this.protected);
     this.router.get('/getuser', this.getUser);
     this.router.post('/verify-email', this.verifyEmail);
   }
@@ -61,7 +62,7 @@ class AuthController implements IControllerBase {
         email,
         password,
       );
-      
+
       const token  = await  user?.getIdTokenResult( ).then(r => r.token)
 
       const loginedUser = {

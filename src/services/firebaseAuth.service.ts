@@ -1,14 +1,10 @@
-import * as admin from 'firebase-admin';
-import * as firebase from 'firebase';
-
+import { admin, firebase } from '../shared/firebase';
 import { nodemailerService } from './nodemailer.service';
-import { firebaseConfig } from '../shared/config/firebaseConfig';
 import { IUser } from '../shared/interfaces/users';
 
 class FirebaseAuthService {
-  private redirectSucessUrl = 'https://a2afccaa6a7c.ngrok.io';
-  private admin;
-  private firebase;
+  private redirectSucessUrl = 'https://611178c6f4da.ngrok.io';
+
   private actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be whitelisted in the Firebase Console.
@@ -16,11 +12,6 @@ class FirebaseAuthService {
     // This must be true.
     handleCodeInApp: true,
   };
-
-  constructor() {
-    this.admin = admin.initializeApp(firebaseConfig);
-    this.firebase = firebase.initializeApp(firebaseConfig);
-  }
 
   private emailHTML(link: string) {
     return `
@@ -32,7 +23,7 @@ class FirebaseAuthService {
 
   async createUser(user: IUser) {
     try {
-      const { providerData } = await this.admin.auth().createUser(user);
+      const { providerData } = await admin.auth().createUser(user);
 
       const { email } = providerData[0];
 
@@ -54,7 +45,7 @@ class FirebaseAuthService {
 
   async signInWithEmailAndPassword(email: string, password: string) {
     try {
-      return await this.firebase
+      return await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
     } catch (e) {
@@ -64,7 +55,7 @@ class FirebaseAuthService {
 
   async getUser() {
     try {
-      return await this.admin.auth().listUsers();
+      return await admin.auth().listUsers();
     } catch (e) {
       throw new Error(e.message);
     }
@@ -72,10 +63,10 @@ class FirebaseAuthService {
 
 
   async verifyEmail(actionCode: string) {
-    try{
-      return await this.firebase.auth().applyActionCode(actionCode)
-    }catch (e) {
-      throw new Error(e.message)
+    try {
+      return await firebase.auth().applyActionCode(actionCode);
+    } catch (e) {
+      throw new Error(e.message);
     }
   }
 }
