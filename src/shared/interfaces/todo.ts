@@ -1,9 +1,9 @@
 export interface ITodo{
   title: string;
   description: string;
-  owner_id: number;
+  owner_id: string;
   completed?: boolean;
-  update_at?: Date;
+  update_at?: string;
 }
 
 export interface ITodoUpdate {

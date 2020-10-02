@@ -3,6 +3,7 @@ import { nodemailerService } from '../nodemailer.service';
 import { IUser } from '../../shared/interfaces/users';
 
 class FirebaseAuthService {
+
   private redirectSucessUrl = 'https://611178c6f4da.ngrok.io';
 
   private actionCodeSettings = {

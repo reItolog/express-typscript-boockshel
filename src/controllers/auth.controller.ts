@@ -27,7 +27,7 @@ class AuthController implements IControllerBase {
       SigninValidateMiddleware,
       this.signinWithEmailAndPassword,
     );
-    this.router.get('/protected', VerifyTokenMiddleware, this.protected); 
+    this.router.get('/protected', VerifyTokenMiddleware, this.protected);
     this.router.post('/verify-email', this.verifyEmail);
   }
 

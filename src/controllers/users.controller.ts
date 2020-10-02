@@ -45,9 +45,9 @@ class UsersController implements IControllerBase {
 
 
   async getUser(req: Request, res: Response) {
-    const id = Number(req.params.id);
+    const id = req.params.id;
     try {
-      const user = await usersModel.findUserById(id);
+      const user = await firebaseUsersService.getUserById(id)
 
       res.status(200).json({ data: user, error: null });
     } catch (error) {
