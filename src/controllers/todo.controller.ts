@@ -16,7 +16,7 @@ class TodoController implements IControllerBase {
   public initRoutes() {
     this.router.post('/todo', this.saveTodo);
     this.router.get('/todo', this.getTodos);
-    // this.router.patch('/todo', this.updateTodo);
+    this.router.patch('/todo', this.updateTodo);
     // this.router.delete('/todo/:id', this.removeTodo);
   }
 
@@ -35,18 +35,18 @@ class TodoController implements IControllerBase {
     }
   };
 
-  // updateTodo = async (req: Request, res: Response) => {
-  //   const { id, ...payload } = req.body;
-  //   console.log(payload);
-  //   try {
-  //     const updatedTodo = await todoModel.updateTodo(id, payload);
-  //
-  //     //TODO: status code for update
-  //     res.status(200).json({ data: updatedTodo, error: null });
-  //   } catch (e) {
-  //     res.status(400).json({ data: null, error: e.message });
-  //   }
-  // };
+  updateTodo = async (req: Request, res: Response) => {
+    const { id, ...payload } = req.body;
+    console.log(payload);
+    try {
+      const updatedTodo = await db.collection('todos').doc(id).update(payload)
+
+      //TODO: status code for update
+      res.status(200).json({ data: updatedTodo, error: null });
+    } catch (e) {
+      res.status(400).json({ data: null, error: e.message });
+    }
+  };
 
   saveTodo = async (req: Request, res: Response) => {
     const { title, description, owner_id } = req.body;
