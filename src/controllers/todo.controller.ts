@@ -15,19 +15,25 @@ class TodoController implements IControllerBase {
 
   public initRoutes() {
     this.router.post('/todo', this.saveTodo);
-    // this.router.get('/todo', this.getTodos);
+    this.router.get('/todo', this.getTodos);
     // this.router.patch('/todo', this.updateTodo);
     // this.router.delete('/todo/:id', this.removeTodo);
   }
 
-  // getTodos = async (req: Request, res: Response) => {
-  //   try {
-  //     const todos = await todoModel.getTodos();
-  //     res.status(200).json({ data: todos, error: null });
-  //   } catch (e) {
-  //     res.status(400).json({ data: null, error: e.message });
-  //   }
-  // };
+  getTodos = async (req: Request, res: Response) => {
+    try {
+      const snapshot  = await db.collection('todos').get();
+      console.log(typeof snapshot);
+      const todos = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      res.status(200).json({ data: todos, error: null });
+    } catch (e) {
+      res.status(400).json({ data: null, error: e.message });
+    }
+  };
 
   // updateTodo = async (req: Request, res: Response) => {
   //   const { id, ...payload } = req.body;
@@ -49,13 +55,14 @@ class TodoController implements IControllerBase {
       description,
       title,
       owner_id,
+      completed: false,
       update_at: getNewDate()
     };
     try {
-      console.log(todo);
-      // const newTodo = await db.collection('todos').add(todo);
-      // console.log(newTodo);
-      res.status(201).json({ data: todo, error: null });
+      const todoRef = await db.collection('todos').add(todo);
+      const newTodo = await todoRef.get();
+
+      res.status(201).json({ data: newTodo.data(), error: null });
     } catch (error) {
       res.json({ data: null, error });
     }
