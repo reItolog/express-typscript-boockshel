@@ -5,7 +5,7 @@ import { usersModel } from '../models/users/users.model';
 
 import { VerifyTokenMiddleware } from '../middlewares';
 
-import { firebaseAuthService } from '../services/firebaseAuth.service';
+import { firebaseUsersService } from '../services/firebase/';
 
 class UsersController implements IControllerBase {
   public path = '/';
@@ -17,9 +17,9 @@ class UsersController implements IControllerBase {
 
   public initRoutes() {
     this.router.get('/users', VerifyTokenMiddleware, this.getAllUsers);
-    this.router.get('/user/:id', this.getUser);
-    this.router.delete('/user/:id', this.removeUser);
-    this.router.patch('/user/:id', this.updateUser);
+    this.router.get('/user/:id', VerifyTokenMiddleware, this.getUser);
+    this.router.delete('/user/:id', VerifyTokenMiddleware, this.removeUser);
+    this.router.patch('/user/:id', VerifyTokenMiddleware, this.updateUser);
   }
 
   async updateUser(req: Request, res: Response) {
@@ -35,7 +35,7 @@ class UsersController implements IControllerBase {
 
   async getAllUsers(req: Request, res: Response) {
     try {
-      const users = await firebaseAuthService.getUser();
+      const users = await firebaseUsersService.getAllUsers();
 
       res.status(200).json({ data: users, error: null });
     } catch (error) {

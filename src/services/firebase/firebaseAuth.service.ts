@@ -1,6 +1,6 @@
-import { admin, firebase } from '../shared/firebase';
-import { nodemailerService } from './nodemailer.service';
-import { IUser } from '../shared/interfaces/users';
+import { admin, firebase } from '../../shared/firebase';
+import { nodemailerService } from '../nodemailer.service';
+import { IUser } from '../../shared/interfaces/users';
 
 class FirebaseAuthService {
   private redirectSucessUrl = 'https://611178c6f4da.ngrok.io';
@@ -52,15 +52,6 @@ class FirebaseAuthService {
       throw new Error(e.message);
     }
   }
-
-  async getUser() {
-    try {
-      return await admin.auth().listUsers();
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  }
-
 
   async verifyEmail(actionCode: string) {
     try {

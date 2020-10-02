@@ -2,10 +2,9 @@ import * as express from 'express';
 import { Request, Response } from 'express';
 
 import IControllerBase from 'interfaces/IControllerBase.interface';
-import { authJwt } from '../services/auth.service';
 import { IUser } from '../shared/interfaces/users';
 
-import { firebaseAuthService } from '../services/firebaseAuth.service';
+import { firebaseAuthService } from '../services/firebase/';
 
 import {
   SigninValidateMiddleware,
@@ -28,8 +27,7 @@ class AuthController implements IControllerBase {
       SigninValidateMiddleware,
       this.signinWithEmailAndPassword,
     );
-    this.router.get('/protected', VerifyTokenMiddleware, this.protected);
-    this.router.get('/getuser', this.getUser);
+    this.router.get('/protected', VerifyTokenMiddleware, this.protected); 
     this.router.post('/verify-email', this.verifyEmail);
   }
 
@@ -82,17 +80,6 @@ class AuthController implements IControllerBase {
       });
     } catch (e) {
       res.json({ data: null, error: e.message });
-    }
-  };
-
-  getUser = async (req: Request, res: Response) => {
-
-    try {
-      const user = await firebaseAuthService.getUser();
-
-      res.status(200).json({ data: user, error: null });
-    } catch (e) {
-      res.status(400).json({ data: null, error: e.message });
     }
   };
 
