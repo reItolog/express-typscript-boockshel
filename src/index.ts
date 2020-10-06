@@ -1,5 +1,4 @@
 import App from './app';
-import MediaController from './controllers/media.controller';
 import UsersController from './controllers/users.controller';
 import TodoController from './controllers/todo.controller';
 import AuthController from './controllers/auth.controller';
@@ -14,7 +13,6 @@ import {
 const app = new App({
   port: 5000,
   controllers: [
-    new MediaController(),
     new UsersController(),
     new TodoController(),
     new AuthController(),

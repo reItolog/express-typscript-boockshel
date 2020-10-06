@@ -4,9 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "start": "npm run migrate && nodemon",
-    "build": "tsc -p tsconfig.json",
-    "migrate": "knex migrate:latest"
+    "start": "nodemon",
+    "build": "tsc -p tsconfig.json"
   },
   "author": "",
   "license": "ISC",

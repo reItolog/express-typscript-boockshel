@@ -4,7 +4,7 @@ import { IUser } from '../../shared/interfaces/users';
 
 class FirebaseAuthService {
 
-  private redirectSucessUrl = 'https://611178c6f4da.ngrok.io';
+  private redirectSucessUrl = 'https://da4fbcbb24ac.ngrok.io';
 
   private actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
